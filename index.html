@@ -1,192 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PBL Presentation | 2026</title>
+<section id="analysis" class="space-y-12">
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-
-body {
-    background-color: #020617;
-    color: #f8fafc;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    scroll-behavior: smooth;
-}
-
-.glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.gradient-text {
-    background: linear-gradient(90deg, #60a5fa, #a855f7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-</style>
-</head>
-
-<body>
-
-<nav class="fixed w-full z-50 glass border-b border-slate-800/50 px-8 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-4">
-        <div class="bg-white p-1 rounded flex items-center justify-center shadow-md" style="height: 48px; width: 48px;">
-            <img src="mujlogo.jpg" alt="MUJ" class="h-full w-auto object-contain">
-        </div>
-        <div>
-            <span class="text-xl font-black text-white uppercase">PBL 2026</span><br>
-            <span class="text-[9px] text-slate-400 uppercase tracking-widest">Department of Computer Science & Engineering</span>
-        </div>
-    </div>
-</nav>
-
-<main class="max-w-6xl mx-auto px-6 pt-48 pb-32 space-y-32">
-
-<!-- TITLE -->
-<section class="text-center">
-    <div class="inline-block px-4 py-1 border border-slate-800 rounded-full text-slate-400 text-[10px] font-mono mb-6 uppercase tracking-widest">
-        ID: 2427030732
-    </div>
-
-    <h1 class="text-6xl font-extrabold uppercase mb-6">
-        <span class="gradient-text">AI Digital Forensic Agent for Deepfake Detection</span>
-    </h1>
-
-    <p class="text-slate-400 italic max-w-3xl mx-auto">
-        Develop an AI-based Digital Forensic Agent capable of detecting deepfake manipulations
-        in images and videos using multimodal analysis and explainable AI techniques.
-    </p>
-
-    <div class="mt-8 text-slate-300">
-        <p><strong>Submitted By:</strong> Neha Vaid (2427030732)</p>
-        <p><strong>Supervised By:</strong> Dr. Gireesh Kumar</p>
-    </div>
-</section>
-
-<!-- PROBLEM + LITERATURE -->
-<section class="grid md:grid-cols-2 gap-12">
-
-<div class="glass p-10 rounded-3xl border-l-4 border-blue-600">
-    <h2 class="text-3xl font-bold mb-4">Problem Statement</h2>
-    <p class="text-slate-400">
-        Deepfakes are AI-generated synthetic media created using GANs and autoencoders.
-        These manipulations threaten digital authenticity, enabling misinformation,
-        cybercrime, and identity theft. Traditional forensic tools fail against
-        modern high-quality deepfakes, requiring AI-powered detection systems.
-    </p>
-</div>
-
-<div class="space-y-6">
-
-    <!-- UPDATED LITERATURE TABLE -->
-    <div class="glass p-6 rounded-3xl border-r-4 border-blue-500 overflow-x-auto">
-        <h3 class="text-blue-400 font-bold mb-4">Literature Review (2025–2026)</h3>
+    <!-- EXISTING MODELS -->
+    <div class="glass p-8 rounded-3xl border-l-4 border-blue-600">
+        <h2 class="text-3xl font-bold mb-6">Existing Models & Performance</h2>
 
         <table class="w-full text-xs text-left text-slate-300">
-            <thead class="text-blue-400 uppercase border-b border-slate-700">
+            <thead class="text-blue-400 border-b border-slate-700">
                 <tr>
-                    <th class="py-2">Paper</th>
-                    <th class="py-2">Key Idea</th>
-                    <th class="py-2">Limitation</th>
+                    <th>Model</th>
+                    <th>Type</th>
+                    <th>Performance</th>
+                    <th>Key Strength</th>
                 </tr>
             </thead>
-
             <tbody class="text-slate-400">
                 <tr class="border-b border-slate-800">
-                    <td class="py-2">Explainable DF (2025)</td>
-                    <td>XAI + ML for forensic detection</td>
-                    <td>Image-only, not multimodal</td>
+                    <td>CNN (XceptionNet)</td>
+                    <td>Vision CNN</td>
+                    <td>~97% AUC (FF++), ~65% (DFDC)</td>
+                    <td>High spatial accuracy</td>
                 </tr>
-
                 <tr class="border-b border-slate-800">
-                    <td class="py-2">CrossDF (2025)</td>
-                    <td>Cross-domain generalization</td>
-                    <td>Fails on unseen data</td>
+                    <td>LSTM Models</td>
+                    <td>Temporal DL</td>
+                    <td>~91% (Celeb-DF)</td>
+                    <td>Captures motion inconsistencies</td>
                 </tr>
-
                 <tr class="border-b border-slate-800">
-                    <td class="py-2">Multi-Attention (2025)</td>
-                    <td>Attention + texture features</td>
-                    <td>High computation cost</td>
+                    <td>Transformers</td>
+                    <td>ViT / TimeSformer</td>
+                    <td>~11% drop cross-dataset</td>
+                    <td>Better generalization</td>
                 </tr>
-
                 <tr class="border-b border-slate-800">
-                    <td class="py-2">Scaling Laws (2025)</td>
-                    <td>Performance vs dataset size</td>
-                    <td>Needs large data</td>
+                    <td>Audio CNN</td>
+                    <td>Audio DL</td>
+                    <td>Moderate</td>
+                    <td>Detects voice anomalies</td>
                 </tr>
-
                 <tr>
-                    <td class="py-2">Review Paper (2026)</td>
-                    <td>Survey of DF techniques</td>
-                    <td>No practical model</td>
+                    <td>SyncNet</td>
+                    <td>Cross-modal</td>
+                    <td>Effective for lip-sync</td>
+                    <td>Audio-video alignment</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <!-- GAP -->
-    <div class="glass p-6 rounded-3xl border-r-4 border-purple-500">
-        <h3 class="text-purple-400 font-bold mb-2">Research Gap</h3>
-        <p class="text-slate-400 text-sm">
-            Most systems rely only on visual detection.
-            Limited explainability and weak robustness in noisy conditions.
-            Lack of multimodal forensic integration.
-        </p>
+    <!-- LIMITATIONS -->
+    <div class="glass p-8 rounded-3xl border-l-4 border-purple-600">
+        <h2 class="text-2xl font-bold mb-4 text-purple-400">Limitations of Existing Models</h2>
+        <ul class="text-slate-400 text-sm space-y-2">
+            <li>• Poor cross-dataset generalization (up to 15% accuracy drop)</li>
+            <li>• Most models are unimodal (only video or only audio)</li>
+            <li>• Fail under compression (social media quality)</li>
+            <li>• High computational cost (Transformers not real-time)</li>
+            <li>• No explainability (black-box predictions)</li>
+        </ul>
     </div>
 
-</div>
+    <!-- RESEARCH GAP -->
+    <div class="glass p-8 rounded-3xl border-l-4 border-pink-600">
+        <h2 class="text-2xl font-bold mb-4 text-pink-400">Research Gaps Identified</h2>
+        <ul class="text-slate-400 text-sm space-y-2">
+            <li>• No model computes audio-visual consistency score</li>
+            <li>• No real-time detection under compressed videos</li>
+            <li>• Lack of explainable AI for forensic evidence</li>
+            <li>• Weak robustness to GAN + diffusion deepfakes</li>
+            <li>• No unified multimodal detection framework</li>
+        </ul>
+    </div>
+
+    <!-- PROPOSED MODEL -->
+    <div class="glass p-8 rounded-3xl border-l-4 border-green-600">
+        <h2 class="text-3xl font-bold mb-4 text-green-400">Proposed Model: AVXF-Net</h2>
+
+        <p class="text-slate-400 text-sm mb-4">
+            A novel multimodal deepfake detection model combining visual, temporal, and audio analysis
+            using cross-modal attention and explainable AI.
+        </p>
+
+        <ul class="text-slate-400 text-sm space-y-2">
+            <li>• CNN (EfficientNet) for visual features</li>
+            <li>• Bi-LSTM for temporal modeling</li>
+            <li>• Audio CNN (MFCC + Spectrogram)</li>
+            <li>• Cross-modal attention for alignment scoring</li>
+            <li>• Grad-CAM + SHAP for explainability</li>
+        </ul>
+    </div>
+
 </section>
-
-<!-- METHODOLOGY -->
-<section>
-<h2 class="text-4xl font-bold text-center mb-12">Proposed Methodology</h2>
-
-<div class="grid md:grid-cols-3 gap-8">
-
-<div class="glass p-8 rounded-3xl text-center">
-<i class="fas fa-database text-blue-500 text-3xl mb-4"></i>
-<h3 class="font-bold mb-2">Data & Preprocessing</h3>
-<p class="text-slate-400 text-sm">
-Image & Video Input<br>
-Frame Extraction (OpenCV)<br>
-Face Detection (YOLOv8)<br>
-Normalization & Resizing
-</p>
-</div>
-
-<div class="glass p-8 rounded-3xl text-center">
-<i class="fas fa-microchip text-purple-500 text-3xl mb-4"></i>
-<h3 class="font-bold mb-2">Model Architecture</h3>
-<p class="text-slate-400 text-sm">
-CNN (ResNet / Xception)<br>
-Bi-LSTM for Temporal Modeling<br>
-MFCC & VGGish Embeddings<br>
-Multimodal Fusion + Softmax
-</p>
-</div>
-
-<div class="glass p-8 rounded-3xl text-center border border-green-500">
-<i class="fab fa-python text-green-500 text-3xl mb-4"></i>
-<h3 class="font-bold mb-2">Deployment</h3>
-<p class="text-slate-400 text-sm">
-Python • PyTorch • OpenCV<br>
-Streamlit Cloud Deployment<br>
-GitHub Repository
-</p>
-</div>
-
-</div>
-</section>
-
-</main>
-
-</body>
-</html>
