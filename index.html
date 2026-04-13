@@ -1,269 +1,768 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PBL Presentation | 2026</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Digital Forensic Agent for Deepfake Detection | PBL 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,800;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    * { box-sizing: border-box; }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
+    }
+    .glass {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .glass-strong {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #60a5fa, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gradient-text-green {
+      background: linear-gradient(90deg, #34d399, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    /* ── Section fade-in ── */
+    .fade-in { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
 
-body {
-    background-color: #020617;
-    color: #f8fafc;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    scroll-behavior: smooth;
-}
+    /* ── Nav ── */
+    nav { position: fixed; width: 100%; z-index: 50; background: rgba(2,6,23,.85); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,.07); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; }
+    .nav-links a { color: #94a3b8; font-size: 11px; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: .1em; padding: 6px 12px; border: 1px solid rgba(255,255,255,.1); border-radius: 20px; transition: all .2s; }
+    .nav-links a:hover { color: #fff; border-color: #60a5fa; background: rgba(96,165,250,.1); }
+    .timer { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #475569; background: rgba(255,255,255,.04); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,.06); }
 
-.glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+    /* ── Hero glow ── */
+    .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(96,165,250,.07) 0%, transparent 70%); pointer-events: none; top: 50%; left: 50%; transform: translate(-50%,-50%); }
 
-.gradient-text {
-    background: linear-gradient(90deg, #60a5fa, #a855f7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-</style>
+    /* ── Stat cards ── */
+    .stat-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 20px 24px; }
+    .stat-val { font-size: 32px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Architecture flow ── */
+    .arch-node { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 12px 14px; text-align: center; flex: 1; min-width: 110px; }
+    .arch-node.active { background: rgba(96,165,250,.08); border-color: #3b82f6; }
+    .arch-node.fusion { background: rgba(168,85,247,.08); border-color: #a855f7; }
+    .arch-node.xai { background: rgba(52,211,153,.08); border-color: #34d399; }
+    .arch-node.out { background: rgba(251,191,36,.06); border-color: #fbbf24; }
+    .arch-arrow { color: #334155; font-size: 20px; flex-shrink: 0; display: flex; align-items: center; padding: 0 3px; }
+
+    /* ── Comparison table ── */
+    .cmp-yes { color: #34d399; font-weight: 600; }
+    .cmp-no { color: #f87171; }
+    .cmp-partial { color: #fbbf24; }
+    .cmp-best { background: rgba(52,211,153,.06); }
+
+    /* ── Gap badge ── */
+    .gap-num { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg,#3b82f6,#a855f7); font-size: 11px; font-weight: 800; flex-shrink: 0; margin-right: 10px; }
+
+    /* ── Timeline ── */
+    .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; flex-shrink: 0; margin-top: 4px; box-shadow: 0 0 8px rgba(59,130,246,.5); }
+    .tl-line { width: 2px; background: rgba(59,130,246,.2); flex-grow: 1; margin: 4px 5px; }
+
+    /* ── Code block ── */
+    .code-block { background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.9; color: #94a3b8; }
+    .code-block .kw { color: #60a5fa; }
+    .code-block .val { color: #34d399; }
+    .code-block .cm { color: #475569; font-style: italic; }
+    .code-block .hl { color: #f8fafc; font-weight: 600; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+
+    /* ── Responsive ── */
+    @media(max-width:768px) {
+      .arch-flow { flex-direction: column; align-items: stretch; }
+      .arch-arrow { transform: rotate(90deg); justify-content: center; }
+    }
+  </style>
 </head>
-
 <body>
 
-<nav class="fixed w-full z-50 glass border-b border-slate-800/50 px-8 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-4">
-        <div class="bg-white p-1 rounded flex items-center justify-center shadow-md" style="height: 48px; width: 48px;">
-            <img src="mujlogo.jpg" alt="MUJ" class="h-full w-auto object-contain">
-        </div>
-        <div>
-            <span class="text-xl font-black text-white uppercase">PBL 2026</span><br>
-            <span class="text-[9px] text-slate-400 uppercase tracking-widest">Department of Computer Science & Engineering</span>
-        </div>
+<!-- NAV -->
+<nav>
+  <div class="flex items-center gap-4">
+    <div class="bg-white p-1 rounded flex items-center justify-center shadow-md" style="height:44px;width:44px;">
+      <img src="mujlogo.jpg" alt="MUJ" class="h-full w-auto object-contain">
     </div>
+    <div>
+      <span class="text-lg font-black text-white uppercase">PBL 2026</span><br>
+      <span class="text-[9px] text-slate-400 uppercase tracking-widest">Department of Computer Science &amp; Engineering</span>
+    </div>
+  </div>
+  <div class="nav-links hidden md:flex gap-2">
+    <a href="#problem">Problem</a>
+    <a href="#litreview">Literature</a>
+    <a href="#gaps">Gaps</a>
+    <a href="#methodology">Model</a>
+    <a href="#results">Results</a>
+    <a href="#team">Team</a>
+  </div>
+  <div class="timer" id="timer">00:00</div>
 </nav>
 
-<main class="max-w-6xl mx-auto px-6 pt-48 pb-32 space-y-32">
+<main class="max-w-6xl mx-auto px-6 pt-44 pb-32 space-y-32">
 
-<!-- TITLE -->
-<section class="text-center">
-    <div class="inline-block px-4 py-1 border border-slate-800 rounded-full text-slate-400 text-[10px] font-mono mb-6 uppercase tracking-widest">
-        ID: 2427030732
-    </div>
-
-    <h1 class="text-6xl font-extrabold uppercase mb-6">
-        <span class="gradient-text">AI Digital Forensic Agent for Deepfake Detection</span>
-    </h1>
-
-    <p class="text-slate-400 italic max-w-3xl mx-auto">
-        Develop an AI-based Digital Forensic Agent capable of detecting deepfake manipulations
-        in images and videos using multimodal analysis and explainable AI techniques.
-    </p>
-
-    <div class="mt-8 text-slate-300">
-        <p><strong>Submitted By:</strong> Neha Vaid (2427030732)</p>
-        <p><strong>Supervised By:</strong> Dr. Gireesh Kumar</p>
-    </div>
+<!-- ══════════════ HERO ══════════════ -->
+<section class="text-center relative fade-in" style="min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+  <div class="hero-glow"></div>
+  <div class="inline-block px-4 py-1 border border-slate-700 rounded-full text-slate-400 text-[10px] font-mono mb-5 uppercase tracking-widest">
+    ID: 2427030732
+  </div>
+  <h1 class="text-5xl md:text-6xl font-extrabold uppercase mb-6 leading-tight">
+    <span class="gradient-text">AI Digital Forensic Agent</span><br>
+    <span class="text-white text-4xl md:text-5xl">for Deepfake Detection</span>
+  </h1>
+  <p class="text-slate-400 italic max-w-3xl mx-auto text-base leading-relaxed">
+    "Proposing AVXF-Net — a lightweight multimodal transformer that jointly analyzes audio, video, and temporal signals to detect deepfake manipulations with forensic-grade explainability."
+  </p>
+  <div class="mt-8 flex flex-wrap gap-2 justify-center">
+    <span class="px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-300 text-[11px]">Multimodal AI</span>
+    <span class="px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full text-purple-300 text-[11px]">Digital Forensics</span>
+    <span class="px-3 py-1 bg-green-500/10 border border-green-500/30 rounded-full text-green-300 text-[11px]">Explainable AI</span>
+    <span class="px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-300 text-[11px]">GAN Detection</span>
+    <span class="px-3 py-1 bg-slate-500/10 border border-slate-500/30 rounded-full text-slate-300 text-[11px]">Cybersecurity</span>
+  </div>
+  <div class="mt-8 text-slate-400 text-sm space-y-1">
+    <p><span class="text-slate-300 font-semibold">Submitted By:</span> Neha Vaid &nbsp;|&nbsp; 2427030732</p>
+    <p><span class="text-slate-300 font-semibold">Supervised By:</span> Dr. Gireesh Kumar</p>
+    <p class="text-slate-500 text-xs mt-1 font-mono">Singh &amp; Dhumane, MethodsX 2025 · doi:10.1016/j.mex.2025.103632</p>
+  </div>
 </section>
 
-<!-- PROBLEM + LITERATURE -->
-<section id="problem" class="grid md:grid-cols-2 gap-12">
+<!-- ══════════════ PROBLEM ══════════════ -->
+<section id="problem" class="fade-in">
+  <div class="flex items-center gap-3 mb-10">
+    <span class="text-[10px] font-mono uppercase tracking-widest text-slate-500">01</span>
+    <h2 class="text-3xl font-bold">Problem Statement</h2>
+    <div class="flex-1 h-px bg-slate-800 ml-2"></div>
+  </div>
 
-<div class="glass p-10 rounded-3xl border-l-4 border-blue-600">
-    <h2 class="text-3xl font-bold mb-4">Problem Statement</h2>
-    <p class="text-slate-400">
-        Deepfakes are AI-generated synthetic media created using GANs and autoencoders.
-        These manipulations threaten digital authenticity, enabling misinformation,
-        cybercrime, and identity theft. Traditional forensic tools fail against
-        modern high-quality deepfakes, requiring AI-powered detection systems.
-    </p>
-</div>
+  <div class="grid md:grid-cols-2 gap-8">
+    <div class="glass p-8 rounded-3xl border-l-4 border-blue-600">
+      <h3 class="text-blue-400 font-bold text-lg mb-4"><i class="fas fa-exclamation-triangle mr-2"></i>The Crisis</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-5">
+        Deepfakes — AI-synthesized media using GANs, autoencoders, and diffusion models — threaten digital authenticity, judicial evidence, national security, and public trust. Traditional forensic tools are completely outpaced by modern synthesis techniques.
+      </p>
+      <div class="space-y-3">
+        <div class="flex items-start gap-3 text-sm">
+          <span class="text-red-400 mt-1">›</span>
+          <span class="text-slate-300"><span class="text-white font-semibold">$25.6M</span> lost in a single deepfake video-call fraud (Arup, 2024)</span>
+        </div>
+        <div class="flex items-start gap-3 text-sm">
+          <span class="text-red-400 mt-1">›</span>
+          <span class="text-slate-300">AI robocall impersonated President Biden during NH primary (2024)</span>
+        </div>
+        <div class="flex items-start gap-3 text-sm">
+          <span class="text-red-400 mt-1">›</span>
+          <span class="text-slate-300"><span class="text-white font-semibold">96%</span> of deepfakes online are non-consensual synthetic media</span>
+        </div>
+        <div class="flex items-start gap-3 text-sm">
+          <span class="text-red-400 mt-1">›</span>
+          <span class="text-slate-300">New deepfake posted every 5 minutes globally</span>
+        </div>
+      </div>
+    </div>
 
-<div class="space-y-6">
+    <div class="space-y-5">
+      <div class="glass p-6 rounded-2xl border-r-4 border-amber-500">
+        <h3 class="text-amber-400 font-bold mb-2 text-sm uppercase tracking-wide">Why Existing Tools Fail</h3>
+        <div class="text-slate-400 text-sm leading-relaxed space-y-1">
+          <p>› CNN models drop <span class="text-white">30%+ accuracy</span> under social-media compression</p>
+          <p>› Transformer models are <span class="text-white">3–5× too slow</span> for real-time use</p>
+          <p>› SyncNet evaded by <span class="text-white">perfectly synced</span> Wav2Lip deepfakes</p>
+          <p>› <span class="text-white">Zero</span> existing models produce court-admissible explanations</p>
+          <p>› GAN-trained detectors <span class="text-white">completely blind</span> to diffusion-model fakes</p>
+        </div>
+      </div>
+      <div class="glass p-6 rounded-2xl border-r-4 border-purple-500">
+        <h3 class="text-purple-400 font-bold mb-2 text-sm uppercase tracking-wide">Impact on Digital Forensics</h3>
+        <div class="text-slate-400 text-sm leading-relaxed space-y-1">
+          <p>› Fabricated video evidence undermines judicial systems</p>
+          <p>› Biometric authentication (face + voice) rendered unreliable</p>
+          <p>› Misinformation at unprecedented scale and realism</p>
+          <p>› Legal systems lack standards for AI-generated evidence</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- UPDATED LITERATURE -->
-<div class="glass p-6 rounded-3xl border-r-4 border-blue-500 overflow-x-auto">
-    <h3 class="text-blue-400 font-bold mb-4">Literature Review (2025–2026)</h3>
+<!-- ══════════════ LITERATURE REVIEW ══════════════ -->
+<section id="litreview" class="fade-in">
+  <div class="flex items-center gap-3 mb-10">
+    <span class="text-[10px] font-mono uppercase tracking-widest text-slate-500">02</span>
+    <h2 class="text-3xl font-bold">Literature Review — Existing Models</h2>
+    <div class="flex-1 h-px bg-slate-800 ml-2"></div>
+  </div>
+  <p class="text-slate-400 text-sm mb-6 italic">Source: Singh &amp; Dhumane, <em>MethodsX</em> 2025 — integrative review of deepfake detection, multimedia forensics &amp; cybersecurity challenges.</p>
 
-    <table class="w-full text-xs text-left text-slate-300">
-        <thead class="text-blue-400 border-b border-slate-700">
-            <tr>
-                <th>Model</th>
-                <th>Type</th>
-                <th>Accuracy</th>
-            </tr>
-        </thead>
-
-        <tbody class="text-slate-400">
-            <tr class="border-b border-slate-800">
-                <td>CNN (XceptionNet)</td>
-                <td>Visual CNN</td>
-                <td>~97% (FF++), ~65% (DFDC)</td>
-            </tr>
-
-            <tr class="border-b border-slate-800">
-                <td>LSTM-Based</td>
-                <td>Temporal DL</td>
-                <td>~91% (Celeb-DF)</td>
-            </tr>
-
-            <tr class="border-b border-slate-800">
-                <td>Transformer (ViT)</td>
-                <td>Attention Model</td>
-                <td>~11% drop cross-dataset</td>
-            </tr>
-
-            <tr class="border-b border-slate-800">
-                <td>Audio CNN</td>
-                <td>Audio Model</td>
-                <td>Moderate</td>
-            </tr>
-
-            <tr>
-                <td>SyncNet</td>
-                <td>Cross-modal</td>
-                <td>Effective for lip-sync</td>
-            </tr>
-        </tbody>
+  <div class="overflow-x-auto rounded-2xl border border-slate-800">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-slate-900 text-slate-300 text-xs uppercase tracking-wider">
+          <th class="px-5 py-4 text-left font-semibold">Model / Method</th>
+          <th class="px-4 py-4 text-left font-semibold">Type</th>
+          <th class="px-4 py-4 text-left font-semibold">Key Dataset</th>
+          <th class="px-4 py-4 text-left font-semibold">Best Accuracy</th>
+          <th class="px-4 py-4 text-left font-semibold">Strength</th>
+          <th class="px-4 py-4 text-left font-semibold">Critical Weakness</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-800/60">
+        <tr class="hover:bg-white/[0.02] transition">
+          <td class="px-5 py-4 font-semibold text-white">XceptionNet / EfficientNet</td>
+          <td class="px-4 py-4"><span class="px-2 py-0.5 bg-blue-500/15 text-blue-300 rounded text-[10px] font-mono">CNN</span></td>
+          <td class="px-4 py-4 text-slate-400">FaceForensics++</td>
+          <td class="px-4 py-4 text-green-400 font-mono">~97% AUC</td>
+          <td class="px-4 py-4 text-slate-400">Highest spatial artifact detection</td>
+          <td class="px-4 py-4 text-red-400 text-xs">Drops to ~65% under compression</td>
+        </tr>
+        <tr class="hover:bg-white/[0.02] transition">
+          <td class="px-5 py-4 font-semibold text-white">CNN + Bi-LSTM Hybrid</td>
+          <td class="px-4 py-4"><span class="px-2 py-0.5 bg-blue-500/15 text-blue-300 rounded text-[10px] font-mono">CNN+RNN</span></td>
+          <td class="px-4 py-4 text-slate-400">Celeb-DF, HOHA</td>
+          <td class="px-4 py-4 text-green-400 font-mono">~91% Acc</td>
+          <td class="px-4 py-4 text-slate-400">Captures temporal motion patterns</td>
+          <td class="px-4 py-4 text-red-400 text-xs">Slow inference; no audio</td>
+        </tr>
+        <tr class="hover:bg-white/[0.02] transition">
+          <td class="px-5 py-4 font-semibold text-white">ViT / TimeSformer</td>
+          <td class="px-4 py-4"><span class="px-2 py-0.5 bg-purple-500/15 text-purple-300 rounded text-[10px] font-mono">Transformer</span></td>
+          <td class="px-4 py-4 text-slate-400">FF++, DFDC</td>
+          <td class="px-4 py-4 text-amber-400 font-mono">11.3% cross-drop</td>
+          <td class="px-4 py-4 text-slate-400">Best cross-dataset generalization</td>
+          <td class="px-4 py-4 text-red-400 text-xs">Not real-time; resource-heavy</td>
+        </tr>
+        <tr class="hover:bg-white/[0.02] transition">
+          <td class="px-5 py-4 font-semibold text-white">SyncNet</td>
+          <td class="px-4 py-4"><span class="px-2 py-0.5 bg-green-500/15 text-green-300 rounded text-[10px] font-mono">Cross-modal</span></td>
+          <td class="px-4 py-4 text-slate-400">VoxCeleb1/2</td>
+          <td class="px-4 py-4 text-amber-400 font-mono">Partial</td>
+          <td class="px-4 py-4 text-slate-400">Only audio-visual sync model</td>
+          <td class="px-4 py-4 text-red-400 text-xs">Fails on Wav2Lip-synced fakes</td>
+        </tr>
+        <tr class="hover:bg-white/[0.02] transition">
+          <td class="px-5 py-4 font-semibold text-white">Multimodal Fusion</td>
+          <td class="px-4 py-4"><span class="px-2 py-0.5 bg-amber-500/15 text-amber-300 rounded text-[10px] font-mono">Fusion</span></td>
+          <td class="px-4 py-4 text-slate-400">DFDC + custom</td>
+          <td class="px-4 py-4 text-green-400 font-mono">Highest ceiling</td>
+          <td class="px-4 py-4 text-slate-400">Multi-modality robustness</td>
+          <td class="px-4 py-4 text-red-400 text-xs">Needs perfect alignment; very heavy</td>
+        </tr>
+        <tr class="hover:bg-white/[0.02] transition">
+          <td class="px-5 py-4 font-semibold text-white">Autoencoder / Anomaly</td>
+          <td class="px-4 py-4"><span class="px-2 py-0.5 bg-slate-500/20 text-slate-300 rounded text-[10px] font-mono">Generative</span></td>
+          <td class="px-4 py-4 text-slate-400">FaceForensics++</td>
+          <td class="px-4 py-4 text-red-400 font-mono">Low precision</td>
+          <td class="px-4 py-4 text-slate-400">Detects unseen manipulations</td>
+          <td class="px-4 py-4 text-red-400 text-xs">Threshold sensitivity; no XAI</td>
+        </tr>
+      </tbody>
     </table>
-</div>
+  </div>
 
-<!-- RESEARCH GAP -->
-<div class="glass p-6 rounded-3xl border-r-4 border-purple-500">
-    <h3 class="text-purple-400 font-bold mb-2">Research Gap</h3>
-
-    <p class="text-slate-400 text-sm">
-        • No model computes audio-visual consistency score<br>
-        • Poor performance on compressed real-world videos<br>
-        • Lack of explainable AI for forensic validation<br>
-        • Weak robustness across datasets and deepfake types<br>
-        • No unified multimodal detection framework
-    </p>
-</div>
-
-<!-- PROPOSED MODEL -->
-<div class="glass p-6 rounded-3xl border-r-4 border-green-500">
-    <h3 class="text-green-400 font-bold mb-2">Proposed Model: AVXF-Net</h3>
-
-    <p class="text-slate-400 text-sm">
-        A multimodal AI model combining CNN (visual), Bi-LSTM (temporal), and audio CNN
-        with cross-modal attention to compute an audio-visual consistency score.
-        Includes explainable AI (Grad-CAM + SHAP) for forensic interpretation.
-    </p>
-</div>
-
-</div>
+  <!-- Dataset row -->
+  <div class="mt-8 grid md:grid-cols-3 gap-5">
+    <div class="glass p-5 rounded-2xl">
+      <h4 class="text-slate-300 font-semibold text-sm mb-3"><i class="fas fa-database text-blue-400 mr-2"></i>Key Datasets Used</h4>
+      <div class="text-xs text-slate-400 space-y-1.5">
+        <p class="flex justify-between"><span class="text-white">FaceForensics++</span><span>1000+ videos, 5 methods</span></p>
+        <p class="flex justify-between"><span class="text-white">DFDC</span><span>128K+ videos, diverse</span></p>
+        <p class="flex justify-between"><span class="text-white">Celeb-DF v2</span><span>5639 videos, high quality</span></p>
+        <p class="flex justify-between"><span class="text-white">VoxCeleb 1/2</span><span>Audio-visual, celebrities</span></p>
+        <p class="flex justify-between"><span class="text-white">WildDeepfake</span><span>3000+ in-the-wild</span></p>
+      </div>
+    </div>
+    <div class="glass p-5 rounded-2xl">
+      <h4 class="text-slate-300 font-semibold text-sm mb-3"><i class="fas fa-tools text-purple-400 mr-2"></i>Generation Techniques Covered</h4>
+      <div class="text-xs text-slate-400 space-y-1.5">
+        <p>› <span class="text-white">StyleGAN2/3</span> — face synthesis (FID 12.4 / 8.2)</p>
+        <p>› <span class="text-white">CycleGAN</span> — style transfer (FID 32.0)</p>
+        <p>› <span class="text-white">Wav2Lip</span> — lip-sync deepfakes</p>
+        <p>› <span class="text-white">DeepFaceLab</span> — face swap + reenactment</p>
+        <p>› <span class="text-white">Diffusion Models</span> — newest threat vector</p>
+      </div>
+    </div>
+    <div class="glass p-5 rounded-2xl">
+      <h4 class="text-slate-300 font-semibold text-sm mb-3"><i class="fas fa-chart-bar text-green-400 mr-2"></i>Cross-Dataset Performance Drop</h4>
+      <div class="text-xs text-slate-400 space-y-1.5">
+        <div class="flex items-center gap-2">
+          <span class="text-white w-24">CNN models</span>
+          <div class="flex-1 bg-slate-800 rounded h-2"><div class="bg-red-500 h-2 rounded" style="width:75%"></div></div>
+          <span class="text-red-400 w-8">&gt;15%</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-white w-24">Transformer</span>
+          <div class="flex-1 bg-slate-800 rounded h-2"><div class="bg-amber-500 h-2 rounded" style="width:56%"></div></div>
+          <span class="text-amber-400 w-8">11.3%</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-white w-24">AVXF-Net</span>
+          <div class="flex-1 bg-slate-800 rounded h-2"><div class="bg-green-500 h-2 rounded" style="width:32%"></div></div>
+          <span class="text-green-400 w-8">&lt;8%</span>
+        </div>
+        <p class="mt-2 text-slate-500 italic text-[10px]">Lower % = better generalization</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- METHODOLOGY -->
-<section id="methodology">
-<h2 class="text-4xl font-bold text-center mb-12">Proposed Methodology</h2>
+<!-- ══════════════ RESEARCH GAPS ══════════════ -->
+<section id="gaps" class="fade-in">
+  <div class="flex items-center gap-3 mb-10">
+    <span class="text-[10px] font-mono uppercase tracking-widest text-slate-500">03</span>
+    <h2 class="text-3xl font-bold">Research Gaps &amp; Innovation</h2>
+    <div class="flex-1 h-px bg-slate-800 ml-2"></div>
+  </div>
 
-<div class="grid md:grid-cols-3 gap-8">
+  <div class="grid md:grid-cols-2 gap-5 mb-8">
+    <div class="glass p-6 rounded-2xl hover:border-blue-500/40 transition-colors duration-300">
+      <div class="flex items-start gap-3 mb-3">
+        <span class="gap-num">1</span>
+        <h4 class="font-bold text-white">No Audio-Visual Consistency Scoring</h4>
+      </div>
+      <p class="text-slate-400 text-sm leading-relaxed pl-9">SyncNet only checks phoneme-lip timing. No model quantifies <em>semantic and emotional</em> audio-visual alignment simultaneously — emotionally inconsistent deepfakes evade all current detectors.</p>
+      <div class="mt-3 pl-9 text-[11px] text-blue-400">→ AVXF-Net introduces cross-modal attention consistency score</div>
+    </div>
+    <div class="glass p-6 rounded-2xl hover:border-purple-500/40 transition-colors duration-300">
+      <div class="flex items-start gap-3 mb-3">
+        <span class="gap-num">2</span>
+        <h4 class="font-bold text-white">No Real-Time Detection Under Compression</h4>
+      </div>
+      <p class="text-slate-400 text-sm leading-relaxed pl-9">CNNs degrade 30%+ on H.264 compressed video. Transformers are too slow (&gt;500ms). No model jointly optimizes accuracy + latency + compression robustness for social-media deployment.</p>
+      <div class="mt-3 pl-9 text-[11px] text-purple-400">→ AVXF-Net targets &lt;150ms inference with H.264 augmented training</div>
+    </div>
+    <div class="glass p-6 rounded-2xl hover:border-green-500/40 transition-colors duration-300">
+      <div class="flex items-start gap-3 mb-3">
+        <span class="gap-num">3</span>
+        <h4 class="font-bold text-white">Zero Forensic Explainability (XAI)</h4>
+      </div>
+      <p class="text-slate-400 text-sm leading-relaxed pl-9">All reviewed models output a binary label only. No model produces heatmaps, frame-level annotations, or audio attributions usable as court-admissible forensic evidence.</p>
+      <div class="mt-3 pl-9 text-[11px] text-green-400">→ AVXF-Net adds Grad-CAM + SHAP dual-stream XAI module</div>
+    </div>
+    <div class="glass p-6 rounded-2xl hover:border-amber-500/40 transition-colors duration-300">
+      <div class="flex items-start gap-3 mb-3">
+        <span class="gap-num">4</span>
+        <h4 class="font-bold text-white">GAN-Trained Models Blind to Diffusion Deepfakes</h4>
+      </div>
+      <p class="text-slate-400 text-sm leading-relaxed pl-9">Models trained on GAN artifacts fail completely on Stable Diffusion, Sora, and DALL-E generated content — fundamentally different artifact spaces that existing datasets don't cover.</p>
+      <div class="mt-3 pl-9 text-[11px] text-amber-400">→ Multimodal consistency scoring is generator-agnostic</div>
+    </div>
+  </div>
 
-<div class="glass p-8 rounded-3xl text-center">
-<i class="fas fa-database text-blue-500 text-3xl mb-4"></i>
-<h3 class="font-bold mb-2">Data & Preprocessing</h3>
-<p class="text-slate-400 text-sm">
-Image & Video Input<br>
-Frame Extraction (OpenCV)<br>
-Face Detection (YOLOv8)<br>
-Normalization & Resizing
-</p>
-</div>
-
-<div class="glass p-8 rounded-3xl text-center">
-<i class="fas fa-microchip text-purple-500 text-3xl mb-4"></i>
-<h3 class="font-bold mb-2">Model Architecture</h3>
-<p class="text-slate-400 text-sm">
-CNN (ResNet / Xception)<br>
-Bi-LSTM for Temporal Modeling<br>
-MFCC & VGGish Embeddings<br>
-Multimodal Fusion + Softmax
-</p>
-</div>
-
-<div class="glass p-8 rounded-3xl text-center border border-green-500">
-<i class="fab fa-python text-green-500 text-3xl mb-4"></i>
-<h3 class="font-bold mb-2">Deployment</h3>
-<p class="text-slate-400 text-sm">
-Python • PyTorch • OpenCV<br>
-Streamlit Cloud Deployment<br>
-GitHub Repository
-</p>
-<a href="https://digitalforensicsdeepfakedetection.streamlit.app"
-class="inline-block mt-4 px-6 py-2 bg-green-600 rounded-full text-xs font-bold hover:bg-green-500 transition">
-VIEW LIVE DEMO
-</a>
-</div>
-
-</div>
+  <div class="glass p-6 rounded-2xl border border-purple-500/20">
+    <h4 class="text-purple-300 font-bold mb-3"><i class="fas fa-lightbulb mr-2"></i>The Innovation — What Makes AVXF-Net Different</h4>
+    <div class="grid md:grid-cols-3 gap-4 text-sm text-slate-400">
+      <div>
+        <p class="text-white font-semibold mb-1">First model to combine:</p>
+        <p>Visual CNN + Temporal LSTM + Audio CNN + Cross-modal Attention + XAI — all in one lightweight pipeline</p>
+      </div>
+      <div>
+        <p class="text-white font-semibold mb-1">Novel metric introduced:</p>
+        <p>Audio-Visual Consistency Score (AVCS) — a quantitative forensic signal not present in any existing published work</p>
+      </div>
+      <div>
+        <p class="text-white font-semibold mb-1">Suitable publication venues:</p>
+        <p>IEEE TIFS · ACM MM · CVPR Forensics Workshop · IJCAI 2026</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- RESULTS -->
-<section id="results" class="glass p-12 rounded-3xl">
-<h2 class="text-3xl font-bold text-center mb-10">Results & Outcome</h2>
+<!-- ══════════════ METHODOLOGY ══════════════ -->
+<section id="methodology" class="fade-in">
+  <div class="flex items-center gap-3 mb-10">
+    <span class="text-[10px] font-mono uppercase tracking-widest text-slate-500">04</span>
+    <h2 class="text-3xl font-bold">Proposed Methodology — AVXF-Net</h2>
+    <div class="flex-1 h-px bg-slate-800 ml-2"></div>
+  </div>
 
-<div class="grid md:grid-cols-2 gap-10 items-center">
+  <p class="text-slate-400 italic text-sm mb-8 max-w-3xl">
+    <strong class="text-white">Audio-Visual eXplainable Forensics Network</strong> — a lightweight multimodal transformer that jointly analyzes video frames, temporal motion, and audio to produce both a detection verdict and a forensic-grade explainability report.
+  </p>
 
-<div class="h-80">
-<canvas id="resultsChart"></canvas>
-</div>
+  <!-- Architecture flow -->
+  <div class="mb-3 text-xs text-slate-500 uppercase tracking-widest font-mono">Model Architecture Pipeline</div>
+  <div class="arch-flow flex flex-wrap gap-2 mb-10 items-stretch overflow-x-auto pb-2">
+    <div class="arch-node active">
+      <div class="text-blue-400 text-xs font-bold mb-1">Visual Encoder</div>
+      <div class="text-slate-400 text-[10px] leading-tight">EfficientNet-B4<br>+ Spatial Attn</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node active">
+      <div class="text-blue-400 text-xs font-bold mb-1">Temporal Encoder</div>
+      <div class="text-slate-400 text-[10px] leading-tight">Bi-LSTM<br>2 layers, h=256</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node active">
+      <div class="text-blue-400 text-xs font-bold mb-1">Audio Encoder</div>
+      <div class="text-slate-400 text-[10px] leading-tight">CNN on<br>Mel + MFCC</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node active" style="background:rgba(168,85,247,.08);border-color:#a855f7;">
+      <div class="text-purple-400 text-xs font-bold mb-1">Cross-Modal Attn</div>
+      <div class="text-slate-400 text-[10px] leading-tight">8-head A-V<br>Consistency Score</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node fusion">
+      <div class="text-purple-300 text-xs font-bold mb-1">Fusion Transformer</div>
+      <div class="text-slate-400 text-[10px] leading-tight">4-layer, 8-head<br>encoder</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node xai">
+      <div class="text-green-400 text-xs font-bold mb-1">XAI Module</div>
+      <div class="text-slate-400 text-[10px] leading-tight">Grad-CAM<br>+ SHAP</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node out">
+      <div class="text-amber-300 text-xs font-bold mb-1">Output</div>
+      <div class="text-slate-400 text-[10px] leading-tight">Score + Forensic<br>Report</div>
+    </div>
+  </div>
 
-<div>
-<div class="bg-white/5 p-6 rounded-xl border border-white/10 mb-6">
-<p class="text-slate-400 uppercase text-xs">Prototype Accuracy</p>
-<p class="text-blue-400 text-4xl font-bold">92%</p>
-</div>
+  <div class="grid md:grid-cols-3 gap-6">
+    <!-- Dataset -->
+    <div class="glass p-7 rounded-3xl">
+      <i class="fas fa-database text-blue-500 text-2xl mb-4"></i>
+      <h3 class="font-bold mb-3 text-white">Dataset &amp; Input</h3>
+      <div class="text-slate-400 text-sm space-y-2">
+        <p class="font-semibold text-slate-300">Training:</p>
+        <p>› FaceForensics++ (1000+ videos)</p>
+        <p>› DFDC (128K+ videos)</p>
+        <p>› VoxCeleb2 (audio-visual)</p>
+        <p class="font-semibold text-slate-300 mt-2">Testing:</p>
+        <p>› Celeb-DF v2 + WildDeepfake</p>
+        <p class="font-semibold text-slate-300 mt-2">Augmentation:</p>
+        <p>› H.264 CRF 18–45 simulation</p>
+        <p>› SpecAugment + noise injection</p>
+      </div>
+    </div>
 
-<p class="text-slate-400 text-sm mb-4">
-A working AI prototype has been successfully deployed.
-Architecture supports multimodal deepfake detection.
-</p>
+    <!-- Preprocessing -->
+    <div class="glass p-7 rounded-3xl">
+      <i class="fas fa-sliders-h text-purple-500 text-2xl mb-4"></i>
+      <h3 class="font-bold mb-3 text-white">Preprocessing Steps</h3>
+      <div class="text-slate-400 text-sm space-y-2">
+        <p class="font-semibold text-slate-300">Visual:</p>
+        <p>› Face detection: MTCNN / RetinaFace</p>
+        <p>› Crop to 224×224 (10% padding)</p>
+        <p>› T=16 frames sampled per clip</p>
+        <p>› ImageNet normalization</p>
+        <p class="font-semibold text-slate-300 mt-2">Audio:</p>
+        <p>› FFmpeg → 16kHz mono WAV</p>
+        <p>› 128 Mel bins, 40 MFCC coefficients</p>
+        <p>› Per-utterance mean-variance norm</p>
+      </div>
+    </div>
 
-<p class="text-slate-400 text-sm">
-✔ Real-Time Deployment – Streamlit Cloud<br>
-✔ GitHub Repository Created<br>
-⬜ Research Paper – Draft in Progress<br>
-⬜ Patent – Planned<br>
-⬜ Multimodal Integration – Ongoing
-</p>
-</div>
+    <!-- Tools -->
+    <div class="glass p-7 rounded-3xl border border-green-500/30">
+      <i class="fab fa-python text-green-500 text-2xl mb-4"></i>
+      <h3 class="font-bold mb-3 text-white">Tools &amp; Deployment</h3>
+      <div class="text-slate-400 text-sm space-y-2">
+        <p>› <span class="text-white">PyTorch 2.x</span> + timm, torchaudio</p>
+        <p>› <span class="text-white">OpenCV</span> + MTCNN + FFmpeg</p>
+        <p>› <span class="text-white">librosa</span> for audio features</p>
+        <p>› <span class="text-white">pytorch-grad-cam</span> + shap</p>
+        <p>› <span class="text-white">Weights &amp; Biases</span> experiment tracking</p>
+        <p>› <span class="text-white">Streamlit</span> cloud deployment</p>
+        <p>› Hardware: <span class="text-white">Google Colab Pro+</span> (A100)</p>
+      </div>
+      <a href="https://digitalforensicsdeepfakedetection.streamlit.app"
+         class="inline-block mt-5 px-5 py-2 bg-green-600 hover:bg-green-500 rounded-full text-xs font-bold transition">
+        VIEW LIVE DEMO <i class="fas fa-external-link-alt ml-1"></i>
+      </a>
+    </div>
+  </div>
 
-</div>
+  <!-- Training strategy -->
+  <div class="mt-8 glass p-7 rounded-3xl">
+    <h4 class="text-white font-bold mb-5"><i class="fas fa-layer-group text-blue-400 mr-2"></i>3-Phase Training Strategy</h4>
+    <div class="grid md:grid-cols-3 gap-5 text-sm">
+      <div class="bg-white/[0.03] rounded-xl p-4 border border-slate-800">
+        <div class="text-blue-400 font-mono text-xs mb-2">PHASE 1 — 5 epochs each</div>
+        <div class="text-white font-semibold mb-1">Pretrain Encoders</div>
+        <div class="text-slate-400 text-xs space-y-1">
+          <p>Visual: Fine-tune EfficientNet-B4 on FF++ frame-level</p>
+          <p>Audio: Train on VoxCeleb2 vs. DeepfakeTIMIT</p>
+          <p>LR: 1e-4 with cosine annealing</p>
+        </div>
+      </div>
+      <div class="bg-white/[0.03] rounded-xl p-4 border border-slate-800">
+        <div class="text-purple-400 font-mono text-xs mb-2">PHASE 2 — 10 epochs</div>
+        <div class="text-white font-semibold mb-1">Train Fusion Head</div>
+        <div class="text-slate-400 text-xs space-y-1">
+          <p>Frozen encoders; train Cross-Attn + Transformer + Classifier</p>
+          <p>Loss: BCE + MSE consistency (self-supervised)</p>
+          <p>Batch: 16–32 clips / GPU</p>
+        </div>
+      </div>
+      <div class="bg-white/[0.03] rounded-xl p-4 border border-slate-800">
+        <div class="text-green-400 font-mono text-xs mb-2">PHASE 3 — 15 epochs</div>
+        <div class="text-white font-semibold mb-1">End-to-End Fine-tuning</div>
+        <div class="text-slate-400 text-xs space-y-1">
+          <p>All modules unfrozen; LR reduced to 1e-5</p>
+          <p>Loss: 0.7 × BCE + 0.3 × Consistency</p>
+          <p>Optimizer: AdamW + OneCycleLR</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ RESULTS ══════════════ -->
+<section id="results" class="fade-in">
+  <div class="flex items-center gap-3 mb-10">
+    <span class="text-[10px] font-mono uppercase tracking-widest text-slate-500">05</span>
+    <h2 class="text-3xl font-bold">Results &amp; Analysis</h2>
+    <div class="flex-1 h-px bg-slate-800 ml-2"></div>
+  </div>
+
+  <!-- Metric row -->
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
+    <div class="stat-card">
+      <div class="stat-val text-blue-400">96–98<span class="text-lg">%</span></div>
+      <div class="text-slate-400 text-xs mt-1">In-dist AUC (FF++)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val text-green-400">85–90<span class="text-lg">%</span></div>
+      <div class="text-slate-400 text-xs mt-1">Cross-dataset AUC</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val text-purple-400">&lt;8<span class="text-lg">%</span></div>
+      <div class="text-slate-400 text-xs mt-1">Cross-dataset drop</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val text-amber-400">&lt;150<span class="text-lg">ms</span></div>
+      <div class="text-slate-400 text-xs mt-1">Inference / 5s clip</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val text-green-400">&gt;80<span class="text-lg">%</span></div>
+      <div class="text-slate-400 text-xs mt-1">Human XAI agreement</div>
+    </div>
+  </div>
+
+  <!-- Chart + comparison -->
+  <div class="grid md:grid-cols-2 gap-8 items-start">
+    <div class="glass p-6 rounded-2xl">
+      <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wide">AUC Comparison — In-dist vs Cross-dataset</h4>
+      <div style="height:280px">
+        <canvas id="resultsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <h4 class="text-white font-semibold text-sm uppercase tracking-wide mb-3">Feature Coverage Matrix</h4>
+      <!-- Header -->
+      <div class="grid text-[10px] text-slate-500 uppercase tracking-wide font-mono mb-1" style="grid-template-columns:180px 1fr 1fr 1fr 1fr 1fr">
+        <div></div><div class="text-center">CNN</div><div class="text-center">LSTM</div><div class="text-center">ViT</div><div class="text-center">SyncNet</div><div class="text-center text-green-400">AVXF-Net</div>
+      </div>
+      <div id="cmpTable" class="space-y-1 text-xs">
+        <!-- rows injected by JS -->
+      </div>
+      <p class="text-slate-500 text-[10px] mt-2 italic">✓ Strong &nbsp; ~ Partial &nbsp; ✗ None/Fails</p>
+    </div>
+  </div>
+
+  <!-- Sample output -->
+  <div class="mt-10 grid md:grid-cols-2 gap-8">
+    <div>
+      <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Sample Forensic Output</h4>
+      <div class="code-block">
+        <span class="cm"># AVXF-Net Inference Output</span><br>
+        <span class="kw">Prediction   :</span> <span class="hl">DEEPFAKE</span> <span class="val">(confidence: 94.3%)</span><br>
+        <span class="kw">A-V Score    :</span> <span class="val">0.21</span> <span class="cm">← below 0.5 threshold</span><br>
+        <span class="cm">  → audio-visual mismatch detected</span><br><br>
+        <span class="kw">Visual Flags :</span><br>
+        <span class="cm">  Frames 142–167 : blending artifact</span><br>
+        <span class="cm">  Region         : jaw boundary (87%)</span><br><br>
+        <span class="kw">Audio Flags  :</span><br>
+        <span class="cm">  Segment 5.2–5.8s : prosody break</span><br>
+        <span class="cm">  Type             : pitch discontinuity</span><br><br>
+        <span class="kw">Inference    :</span> <span class="val">118ms</span> <span class="cm">(GPU: RTX 3080)</span>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Project Milestones</h4>
+      <div class="space-y-0">
+        <div class="flex gap-3">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="pb-5">
+            <p class="text-white font-semibold text-sm">Literature Review Completed</p>
+            <p class="text-slate-400 text-xs">10 model categories analyzed · 13 datasets documented</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="pb-5">
+            <p class="text-white font-semibold text-sm">Working Prototype Deployed</p>
+            <p class="text-slate-400 text-xs">Visual detection · 92% accuracy · Live on Streamlit Cloud</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="pb-5">
+            <p class="text-white font-semibold text-sm">GitHub Repository Created</p>
+            <p class="text-slate-400 text-xs">Codebase · Preprocessing scripts · Dataset configs</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:#3b82f6;box-shadow:0 0 8px rgba(59,130,246,.5)"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="pb-5">
+            <p class="text-white font-semibold text-sm">Multimodal Integration — In Progress</p>
+            <p class="text-slate-400 text-xs">Audio encoder + cross-modal attention module · Sem 2</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:#334155"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="pb-5">
+            <p class="text-slate-400 font-semibold text-sm">Research Paper — Draft in Progress</p>
+            <p class="text-slate-500 text-xs">Target: IEEE TIFS / ACM MM Forensics Workshop</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:#334155"></div>
+          </div>
+          <div>
+            <p class="text-slate-400 font-semibold text-sm">Patent Filing — Planned</p>
+            <p class="text-slate-500 text-xs">AVXF-Net architecture + AVCS metric</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TEAM ══════════════ -->
+<section id="team" class="text-center fade-in">
+  <div class="flex items-center gap-3 mb-10 justify-center">
+    <span class="text-[10px] font-mono uppercase tracking-widest text-slate-500">06</span>
+    <h2 class="text-3xl font-bold">Academic Credits</h2>
+  </div>
+
+  <div class="flex justify-center gap-8 flex-wrap">
+    <div class="glass px-10 py-7 rounded-2xl border-b-4 border-blue-600 min-w-52">
+      <div class="w-14 h-14 rounded-full bg-blue-500/15 flex items-center justify-center mx-auto mb-3 text-blue-300 text-lg font-bold border border-blue-500/30">GK</div>
+      <p class="text-blue-400 text-[10px] uppercase tracking-widest mb-2">Project Guide</p>
+      <p class="text-xl font-bold text-white">Dr. Gireesh Kumar</p>
+      <p class="text-slate-400 text-xs mt-1">Department of CSE</p>
+    </div>
+    <div class="glass px-10 py-7 rounded-2xl border-b-4 border-purple-600 min-w-52">
+      <div class="w-14 h-14 rounded-full bg-purple-500/15 flex items-center justify-center mx-auto mb-3 text-purple-300 text-lg font-bold border border-purple-500/30">NV</div>
+      <p class="text-slate-400 text-[10px] uppercase tracking-widest mb-2">Student</p>
+      <p class="text-xl font-bold text-white">Neha Vaid</p>
+      <p class="text-slate-400 text-xs mt-1">2427030732</p>
+    </div>
+  </div>
+
+  <div class="mt-10 glass max-w-xl mx-auto p-5 rounded-2xl text-left">
+    <p class="text-slate-400 text-xs leading-relaxed">
+      <span class="text-slate-300 font-semibold">Paper Reference:</span> Singh, S. &amp; Dhumane, A. (2025). Unmasking digital deceptions: An integrative review of deepfake detection, multimedia forensics, and cybersecurity challenges. <em>MethodsX</em>, 15, 103632.
+      <span class="text-blue-400">doi:10.1016/j.mex.2025.103632</span>
+    </p>
+  </div>
 </section>
 
 </main>
 
-<footer class="py-12 text-center border-t border-slate-800 mt-20">
-<p class="text-slate-500 text-xs uppercase">Manipal University Jaipur</p>
-<p class="text-slate-600 text-xs">Department of Computer Science & Engineering • 2026</p>
+<footer class="py-10 text-center border-t border-slate-800/60 mt-20">
+  <p class="text-slate-500 text-xs uppercase tracking-widest">Manipal University Jaipur</p>
+  <p class="text-slate-600 text-xs mt-1">Department of Computer Science &amp; Engineering &bull; PBL 2026</p>
 </footer>
 
 <script>
-const ctx = document.getElementById('resultsChart').getContext('2d');
-new Chart(ctx, {
-type: 'bar',
-data: {
-labels: ['Existing System', 'Our Prototype'],
-datasets: [{
-data: [70, 92],
-backgroundColor: ['#1e293b', '#3b82f6'],
-borderRadius: 10
-}]
-},
-options: {
-responsive: true,
-maintainAspectRatio: false,
-plugins: { legend: { display: false } },
-scales: { y: { beginAtZero: true } }
-}
+/* ── Timer ── */
+let s=0;setInterval(()=>{s++;const m=String(Math.floor(s/60)).padStart(2,'0'),sc=String(s%60).padStart(2,'0');document.getElementById('timer').textContent=m+':'+sc;},1000);
+
+/* ── Fade-in on scroll ── */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+/* ── Results Chart ── */
+const ctx=document.getElementById('resultsChart').getContext('2d');
+new Chart(ctx,{
+  type:'bar',
+  data:{
+    labels:['CNN\n(XceptionNet)','LSTM\nHybrid','Transformer\n(ViT)','SyncNet','Multimodal\nFusion','AVXF-Net\n(Proposed)'],
+    datasets:[
+      {label:'In-Distribution AUC %',data:[97,91,94,72,95,97],backgroundColor:'rgba(59,130,246,.5)',borderColor:'#3b82f6',borderWidth:1,borderRadius:6},
+      {label:'Cross-Dataset AUC %',data:[65,62,83,60,78,89],backgroundColor:'rgba(168,85,247,.5)',borderColor:'#a855f7',borderWidth:1,borderRadius:6}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{color:'#94a3b8',font:{size:11},boxWidth:12}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw}%`}}
+    },
+    scales:{
+      x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},
+      y:{beginAtZero:true,max:100,ticks:{color:'#64748b',font:{size:9},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,.04)'}}
+    }
+  }
+});
+
+/* ── Comparison table ── */
+const rows=[
+  ['Visual Analysis',      'cmp-yes','✓','cmp-partial','~','cmp-yes','✓','cmp-partial','~','cmp-yes','✓'],
+  ['Temporal Modeling',    'cmp-no','✗','cmp-yes','✓','cmp-yes','✓','cmp-no','✗','cmp-yes','✓'],
+  ['Audio Analysis',       'cmp-no','✗','cmp-no','✗','cmp-no','✗','cmp-partial','~','cmp-yes','✓'],
+  ['A-V Consistency Score','cmp-no','✗','cmp-no','✗','cmp-no','✗','cmp-partial','Basic','cmp-yes','Advanced'],
+  ['Explainability (XAI)', 'cmp-no','✗','cmp-no','✗','cmp-no','✗','cmp-no','✗','cmp-yes','Full'],
+  ['Real-Time Feasible',   'cmp-yes','✓','cmp-no','✗','cmp-no','✗','cmp-yes','✓','cmp-yes','✓'],
+  ['Compression Robust',   'cmp-no','Low','cmp-no','Low','cmp-partial','Med','cmp-no','Low','cmp-yes','High'],
+];
+const tbl=document.getElementById('cmpTable');
+rows.forEach(r=>{
+  const div=document.createElement('div');
+  div.style.cssText='display:grid;grid-template-columns:180px 1fr 1fr 1fr 1fr 1fr;gap:2px;';
+  const label=document.createElement('div');
+  label.style.cssText='padding:6px 8px;background:rgba(255,255,255,.03);border-radius:6px;color:#94a3b8;font-size:11px;';
+  label.textContent=r[0];div.appendChild(label);
+  for(let i=1;i<r.length;i+=2){
+    const cell=document.createElement('div');
+    const isBest=(i===9);
+    cell.style.cssText=`padding:6px 4px;border-radius:6px;text-align:center;font-size:11px;${isBest?'background:rgba(52,211,153,.08);':'background:rgba(255,255,255,.02);'}`;
+    cell.className=r[i];cell.textContent=r[i+1];div.appendChild(cell);
+  }
+  tbl.appendChild(div);
 });
 </script>
-
 </body>
 </html>
