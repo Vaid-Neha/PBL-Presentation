@@ -11,86 +11,135 @@
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap');
-body{background:#020617;color:#f8fafc;font-family:'Plus Jakarta Sans',sans-serif}
-.glass{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(15px)}
-.fade-in{opacity:0;transform:translateY(20px);transition:.6s}
-.fade-in.visible{opacity:1;transform:none}
+
+body {
+  background-color: #020617;
+  color: #f8fafc;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
 </style>
 </head>
 
 <body>
 
-<main class="max-w-6xl mx-auto px-6 py-20 space-y-20">
+<main class="max-w-6xl mx-auto px-6 py-20 space-y-24">
 
 <!-- TITLE -->
-<section class="text-center fade-in">
-<h1 class="text-5xl font-bold mb-4">AI Digital Forensic Agent for Deepfake Detection</h1>
-<p class="text-slate-400">Neha Vaid | Dr. Gireesh Kumar</p>
+<section class="text-center">
+  <h1 class="text-5xl font-extrabold mb-4 gradient-text">
+    AI Digital Forensic Agent for Deepfake Detection
+  </h1>
+  <p class="text-slate-400">
+    Neha Vaid (2427030732) <br>
+    Guided by Dr. Gireesh Kumar
+  </p>
 </section>
 
 <!-- PROBLEM -->
-<section class="glass p-6 rounded-xl fade-in">
-<h2 class="text-xl font-bold mb-3">Problem Statement</h2>
-<p class="text-slate-400 text-sm">
-Deepfakes are highly realistic AI-generated media that threaten authenticity and security.
-Traditional detection methods fail against modern techniques.
-</p>
+<section class="glass p-8 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-3">Problem Statement</h2>
+  <p class="text-slate-400 text-sm">
+    Deepfakes are AI-generated synthetic media created using GANs and diffusion models.
+    They pose threats such as misinformation, identity theft, and cybercrime.
+    Traditional detection systems fail against modern high-quality deepfakes.
+  </p>
 </section>
 
 <!-- LITERATURE -->
-<section class="glass p-6 rounded-xl fade-in">
-<h2 class="text-xl font-bold mb-3">Literature Review</h2>
-<ul class="text-slate-400 text-sm space-y-1">
-<li>CNN (XceptionNet) – High accuracy but poor generalization</li>
-<li>LSTM – Temporal analysis but slow</li>
-<li>Transformer – Good generalization but heavy</li>
-<li>SyncNet – Lip-sync detection only</li>
-</ul>
+<section class="glass p-8 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-4">Literature Review</h2>
+  <ul class="text-slate-400 text-sm space-y-2">
+    <li>• CNN (XceptionNet): High accuracy (~97%) but poor generalization</li>
+    <li>• LSTM Models: Capture temporal features (~91%)</li>
+    <li>• Transformers: Good generalization but heavy computation</li>
+    <li>• SyncNet: Audio-visual sync detection but limited scope</li>
+  </ul>
 </section>
 
 <!-- GAP -->
-<section class="glass p-6 rounded-xl fade-in">
-<h2 class="text-xl font-bold mb-3">Research Gap</h2>
-<ul class="text-slate-400 text-sm space-y-1">
-<li>No audio-visual consistency scoring</li>
-<li>No explainability</li>
-<li>Poor performance on compressed data</li>
-</ul>
+<section class="glass p-8 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-4">Research Gap</h2>
+  <ul class="text-slate-400 text-sm space-y-2">
+    <li>• No audio-visual consistency scoring</li>
+    <li>• Lack of explainability</li>
+    <li>• Poor performance on compressed data</li>
+    <li>• No unified multimodal model</li>
+  </ul>
 </section>
 
 <!-- MODEL -->
-<section class="glass p-6 rounded-xl fade-in">
-<h2 class="text-xl font-bold mb-3">Proposed Model</h2>
-<p class="text-slate-400 text-sm">
-AVXF-Net combines CNN, LSTM, and audio models with cross-modal attention and explainability.
-</p>
+<section class="glass p-8 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-4">Proposed Model – AVXF-Net</h2>
+  <p class="text-slate-400 text-sm">
+    A multimodal AI model combining CNN (visual), Bi-LSTM (temporal),
+    and audio CNN with cross-modal attention to compute an
+    Audio-Visual Consistency Score. Includes explainable AI outputs.
+  </p>
 </section>
 
 <!-- IMPLEMENTATION PLAN -->
-<section class="glass p-6 rounded-xl fade-in">
-<h2 class="text-xl font-bold mb-3">Implementation Plan</h2>
-<ul class="text-slate-400 text-sm space-y-1">
-<li>Data collection (FF++, DFDC)</li>
-<li>Frame & audio extraction</li>
-<li>Feature extraction (CNN, MFCC)</li>
-<li>Model training</li>
-<li>Explainability integration</li>
-<li>Deployment using Streamlit</li>
-</ul>
+<section class="glass p-8 rounded-2xl border border-blue-500/30">
+  <h2 class="text-2xl font-bold mb-4 text-blue-300">Implementation Plan</h2>
+
+  <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-400">
+
+    <div>
+      <p class="text-white font-semibold">Step 1: Data Preparation</p>
+      <p>Dataset collection, frame extraction, audio extraction</p>
+    </div>
+
+    <div>
+      <p class="text-white font-semibold">Step 2: Feature Extraction</p>
+      <p>CNN (visual), LSTM (temporal), MFCC (audio)</p>
+    </div>
+
+    <div>
+      <p class="text-white font-semibold">Step 3: Model Development</p>
+      <p>Cross-modal attention + fusion model</p>
+    </div>
+
+    <div>
+      <p class="text-white font-semibold">Step 4: Explainability</p>
+      <p>Grad-CAM + SHAP integration</p>
+    </div>
+
+    <div>
+      <p class="text-white font-semibold">Step 5: Evaluation</p>
+      <p>Cross-dataset + compression testing</p>
+    </div>
+
+    <div>
+      <p class="text-white font-semibold">Step 6: Deployment (Future)</p>
+      <p>Streamlit interface for detection</p>
+    </div>
+
+  </div>
 </section>
 
 <!-- RESULTS -->
-<section class="glass p-6 rounded-xl fade-in">
-<h2 class="text-xl font-bold mb-3">Expected Results</h2>
-<p class="text-slate-400 text-sm">High accuracy (~95%) with improved robustness and explainability.</p>
+<section class="glass p-8 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-4">Expected Results</h2>
+  <p class="text-slate-400 text-sm">
+    The model is expected to achieve ~95% accuracy with improved robustness,
+    real-time detection, and explainable outputs.
+  </p>
+</section>
+
+<!-- MILESTONE -->
+<section class="glass p-8 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-4">Progress</h2>
+  <p class="text-slate-300 font-semibold">System Design Completed</p>
+  <p class="text-slate-400 text-sm">
+    Literature review, research gap identification, and AVXF-Net design completed.
+  </p>
 </section>
 
 </main>
-
-<script>
-const obs=new IntersectionObserver(e=>{e.forEach(x=>x.isIntersecting&&x.target.classList.add('visible'))});
-document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-</script>
 
 </body>
 </html>
